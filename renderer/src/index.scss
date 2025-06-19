@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&family=Noto+Sans+TC:wght@100..900&display=swap');
+
+@mixin flex-center($mode: 1){
+  display: flex;
+  align-items: center;
+
+  @if $mode == 1{
+    justify-content: center;
+  }@else if $mode == 2{
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  color: rgba(255, 255, 255, 0.87);
+  font-family: "Noto Sans TC", Arial, sans-serif;
+  font-weight: 400;
+  font-synthesis: none;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body, #root{
+  width: 100%;
+  min-height: 100vh;
+  background-color: #242424;
+
+  display: flex;
+  @include flex-center(1);
+}
+
+a{
+  font-weight: 500;
+  color: rgb(100, 108, 255);
+  text-decoration: inherit;
+}
+a:hover {
+  color: rgb(83, 91, 242);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  background-color: rgb(249, 249, 249);
+  cursor: pointer;
+
+  border-radius: 8px;
+  border: 1px solid transparent;
+
+  padding: 0.5em 1.0em;
+
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: rgb(100, 108, 255);
+}
+

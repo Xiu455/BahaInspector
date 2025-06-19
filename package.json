@@ -1,0 +1,41 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "react": "cd renderer && npx vite",
+    "electron": "chcp 65001 && electron .",
+    "dev": "concurrently \"npm:electron\" \"npm:react\"",
+    "vite:build": "cd renderer && npx vite build",
+    "build": "cd renderer && npx vite build && cd ../ && electron-builder",
+    "install:all": "npm install && cd renderer && npm install"
+  },
+  "build": {
+    "appId": "com.example.app",
+    "productName": "Electron-Template",
+    "directories": {
+      "output": "pack"
+    },
+    "files": [
+      "**/*",
+      "!.vscode",
+      "build/"
+    ],
+    "asar": false
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "it's a app",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8",
+    "electron-reloader": "^1.2.3"
+  },
+  "charset": "UTF-8",
+  "dependencies": {
+    "electron-is-dev": "^3.0.1",
+    "sass": "^1.89.2"
+  }
+}

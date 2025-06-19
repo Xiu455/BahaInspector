@@ -1,0 +1,11 @@
+@mixin flex-center($mode: 1){
+  display: flex;
+  align-items: center;
+
+  @if $mode == 1{
+    justify-content: center;
+  }@else if $mode == 2{
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}
