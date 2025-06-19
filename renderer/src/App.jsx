@@ -1,15 +1,21 @@
 import { useState, useEffect } from 'react'
+import { proxy, useSnapshot } from 'valtio'
 
 import './App.scss'
 
 const electron = window['electron'];  // 獲得後端溝通API
+
+let stateProxy = proxy({
+  count: 0
+})
 
 function App(props){
   let {
     setting,
     ...rest
   } = props;
-  const [count, setCount] = useState(0);
+
+  const state = useSnapshot(stateProxy);
 
   const callBE = () => {
     electron.send('send', 'Hello from frontend');
@@ -27,8 +33,8 @@ function App(props){
   },[]);
 
   return (<>
-    <button onClick={() => setCount((count) => count + 1)}>
-      點擊次數: {count}
+    <button onClick={() => stateProxy.count++}>
+      點擊次數: { state.count }
     </button>
 
     <button onClick={callBE}>
