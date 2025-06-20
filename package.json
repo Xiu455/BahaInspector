@@ -1,5 +1,5 @@
 {
-  "name": "src",
+  "name": "BahaInspector",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
@@ -12,16 +12,23 @@
   },
   "build": {
     "appId": "com.example.app",
-    "productName": "Electron-Template",
+    "productName": "BahaInspector",
     "directories": {
       "output": "pack"
     },
     "files": [
       "**/*",
       "!.vscode",
-      "build/"
+      "!renderer",
+      "!pack",
+      "!LICENSE",
+      "!Electron API.md",
+      "!README.md"
     ],
-    "asar": false
+    "asar": false,
+    "win": {
+      "target": ["portable", "dir"]
+    }
   },
   "keywords": [],
   "author": "",
