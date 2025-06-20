@@ -35,7 +35,11 @@ body, #root{
   background-color: #242424;
 
   display: flex;
-  @include flex-center(1);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  gap: 8px;
 }
 
 a{

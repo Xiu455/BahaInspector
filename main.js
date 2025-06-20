@@ -1,10 +1,9 @@
 // @charset "UTF-8";
 
-// const fs = require('fs');
 const { join } = require('path');
-// const { spawn } = require('child_process');
+const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron');
 
-const { app, BrowserWindow, dialog, ipcMain, globalShortcut } = require('electron');
+const ipcHandlers = require('./_ipc-handlers/index');
 
 let mainWindow;
 
@@ -72,28 +71,10 @@ const keyReg = () => {
 
     keyReg();  // 按鍵註冊
 
-    //主動發送通知
-    mainWindow.webContents.send('backend-notify', { message: '來自主進程的訊息' });
+    Object.entries(ipcHandlers).forEach(([name, fn]) => {
+        if(typeof fn !== 'function') return;
 
-    // 接收渲染進程的訊息 並回覆
-    ipcMain.on('send',(event, data) => {
-        console.log(`收到渲染進程的數據(${new Date()}):`);
-        console.log(data);
-
-        event.reply('backend-reply', {
-            status: 'success',
-            msg: '這是後端的回應',
-            receivedData: data
-        });
-    });
-
-    
-    // 接收渲染進程的訊息 並回覆
-    ipcMain.handle('test-reply', async (event, data) => {
-        return {
-            status: 'success',
-            data: '這是 handle/invoke 的回應'
-        };
+        fn();
     });
 
     // 關閉視窗時關閉應用

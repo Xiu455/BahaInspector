@@ -17,28 +17,36 @@ function App(props){
 
   const state = useSnapshot(stateProxy);
 
-  const callBE = () => {
-    electron.send('send', 'Hello from frontend');
+  const callBeEvent1 = async () => {
+    const result = await electron.invoke('event1');
+    console.log(result);
   }
 
-  useEffect(() => {
-    electron.receive('backend-reply', (data) => {
-      console.log('收到後端回覆');
-      console.log(data);
-    });
+  const callBeEvent2 = async () => {
+    const result = await electron.invoke('event2');
+    console.log(result);
+  }
 
-    electron.receive('backend-notify', (data) => {
-      console.log('主進程通知:', data);
-  });
-  },[]);
+  const callBeEvent3 = async () => {
+    const result = await electron.invoke('event3');
+    console.log(result);
+  }
 
   return (<>
     <button onClick={() => stateProxy.count++}>
       點擊次數: { state.count }
     </button>
 
-    <button onClick={callBE}>
-      發送訊息到後端
+    <button onClick={callBeEvent1}>
+      後端事件1
+    </button>
+
+    <button onClick={callBeEvent2}>
+      後端事件2
+    </button>
+
+    <button onClick={callBeEvent3}>
+      後端事件3
     </button>
   </>)
 }
