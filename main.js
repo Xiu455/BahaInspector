@@ -58,10 +58,14 @@ const keyReg = () => {
 }
 
 (async () => {
-    // const isDev = await import('electron-is-dev').then(mod => mod.default);
-
     app.on('ready', () => { app.locale = 'zh-TW'; });   // 設定語言
     await app.whenReady();  // 等待app準備好
+
+    Object.entries(ipcHandlers).forEach(([name, fn]) => {
+        if(typeof fn !== 'function') return;
+
+        fn();
+    });
 
     mainWindow = new BrowserWindow(windowSetting1);
     if(isDev){
@@ -71,12 +75,6 @@ const keyReg = () => {
     }
 
     keyReg();  // 按鍵註冊
-
-    Object.entries(ipcHandlers).forEach(([name, fn]) => {
-        if(typeof fn !== 'function') return;
-
-        fn();
-    });
 
     // 關閉視窗時關閉應用
     app.on('window-all-closed', () => {
