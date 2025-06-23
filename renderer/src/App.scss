@@ -9,3 +9,9 @@
     flex-direction: column;
   }
 }
+
+.list{
+  width: clamp(500px, 80vw, 1000px);
+  height: 80vh;
+  background-color: black;
+}

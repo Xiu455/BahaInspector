@@ -74,3 +74,12 @@ button:hover {
   border-color: rgb(100, 108, 255);
 }
 
+::-webkit-scrollbar{
+  --w: 5px;
+  width: var(--w);
+  height: var(--w);
+}
+::-webkit-scrollbar-thumb{
+  background-color:rgb(121, 121, 121);
+  border-radius: 99999px;
+}

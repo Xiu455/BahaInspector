@@ -4,6 +4,7 @@ import { useSnapshot } from 'valtio'
 import {  } from './@util/GlobalValtio'
 
 import { FSL, FSLCtrl } from './@cpn/FSL'
+import { List, AutoSizer } from 'react-virtualized';
 
 import './App.scss'
 
@@ -15,15 +16,34 @@ function App(props){
     const init = async () => {
       FSLCtrl.setMsg('讀取設定檔中...');
       const config = await electron.invoke('get-config');
-      console.log(config);
+
       FSLCtrl.close();
     }
 
     init();
   }, []);
 
+  const items = new Array(500).fill(0).map((_, index) => `Item ${index}`);
+
   return (<>
     <FSL />
+    <div className="list">
+      <AutoSizer>
+        {({ height, width }) => (
+          <List
+            height={height}
+            width={width}
+            rowCount={items.length}
+            rowHeight={50}
+            rowRenderer={({ index, key, style }) => (
+              <div key={key} style={style}>
+                {items[index]}
+              </div>
+            )}
+          />
+        )}
+      </AutoSizer>
+    </div>
   </>)
 }
 
