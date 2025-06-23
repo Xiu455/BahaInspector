@@ -2,6 +2,7 @@
 
 const { join } = require('path');
 const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron');
+const isDev = require('electron-is-dev');
 
 const ipcHandlers = require('./_ipc-handlers/index');
 
@@ -57,7 +58,7 @@ const keyReg = () => {
 }
 
 (async () => {
-    const isDev = await import('electron-is-dev').then(mod => mod.default);
+    // const isDev = await import('electron-is-dev').then(mod => mod.default);
 
     app.on('ready', () => { app.locale = 'zh-TW'; });   // 設定語言
     await app.whenReady();  // 等待app準備好

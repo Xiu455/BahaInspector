@@ -27,7 +27,10 @@
     ],
     "asar": false,
     "win": {
-      "target": ["portable", "dir"]
+      "target": [
+        "portable",
+        "dir"
+      ]
     }
   },
   "keywords": [],
@@ -42,7 +45,7 @@
   },
   "charset": "UTF-8",
   "dependencies": {
-    "electron-is-dev": "^3.0.1",
+    "electron-is-dev": "^2.0.0",
     "sass": "^1.89.2"
   }
 }

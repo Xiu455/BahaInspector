@@ -1,0 +1,52 @@
+#FSL-1{
+  --c1: rgb(22, 22, 22, .9);
+  --c2: rgb(0, 0, 0, .9);
+
+  width: 100vw;
+  height: 100vh;
+
+  background: repeating-linear-gradient(
+    45deg,
+    var(--c1),               /* 灰色起點 */
+    var(--c1) 10px,          /* 灰色延伸到 20px */
+    var(--c2) 10px,                /* 黑色從 20px 開始 */
+    var(--c2) 15px                 /* 黑色延伸到 25px，總共5px */
+  );
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+
+  & > span{
+    padding: .5em 1em;
+    position: absolute;
+      top: 60%;
+      left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  img{
+    width: clamp(50px, 7vw, 80px);
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+
+    animation: imgSpin 2s linear infinite;
+  }
+}
+#FSL-1.hid{
+  display: none;
+}
+
+@keyframes imgSpin{
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}

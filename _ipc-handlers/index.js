@@ -1,19 +1,16 @@
+const fs = require('fs');
+const path = require('path');
 const { ipcMain } = require('electron');
+const isDev = require('electron-is-dev');
 
-exports.event1 = () => {
-  ipcMain.handle('event1', async (event, args) => {
-    return 'event1 response';
-  });
-}
+const ROOTDIR = isDev?
+  process.cwd() :
+  path.join(process.cwd(),'resources/app');
 
-exports.event2 = () => {
-  ipcMain.handle('event2', async (event, args) => {
-    return `event2 response`;
-  });
-}
-
-exports.event3 = () => {
-  ipcMain.handle('event3', async (event, args) => {
-    return `event3 response`;
+// 讀取設定檔
+exports.getConfig = () => {
+  ipcMain.handle('get-config', async (event, props) => {
+    const settingData = fs.readFileSync(path.join(ROOTDIR, '_data/config.json'), 'utf-8');
+    return JSON.parse(settingData);
   });
 }
