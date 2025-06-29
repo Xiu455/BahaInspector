@@ -27,24 +27,26 @@ function App(props){
 
   return (<>
     <FSL />
-    <div className="list">
-      <AutoSizer>
-        {({ height, width }) => (
-          <List
-            height={height}
-            width={width}
-            rowCount={items.length}
-            rowHeight={50}
-            rowRenderer={({ index, key, style }) => (
-              <div key={key} style={style}>
-                {items[index]}
-              </div>
-            )}
-          />
-        )}
-      </AutoSizer>
-    </div>
+    
   </>)
 }
 
 export default App
+
+{/* <div className="list">
+  <AutoSizer>
+    {({ height, width }) => (
+      <List
+        height={height}
+        width={width}
+        rowCount={items.length}
+        rowHeight={50}
+        rowRenderer={({ index, key, style }) => (
+          <div key={key} style={style}>
+            {items[index]}
+          </div>
+        )}
+      />
+    )}
+  </AutoSizer>
+</div> */}
