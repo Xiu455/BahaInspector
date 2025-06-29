@@ -1,0 +1,34 @@
+@mixin flex-center($mode: 1){
+  display: flex;
+  align-items: center;
+
+  @if $mode == 1{
+    justify-content: center;
+  }@else if $mode == 2{
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}
+
+.sidebar{
+  width: clamp(200px, 20vw, 350px);
+  height: 100vh;
+  background-color: #000000;
+
+  @include flex-center(2);
+
+  position: relative;
+
+  .logo{
+    height: 10vh;
+    aspect-ratio: 1 / 1;
+    user-select: none;
+
+    @include flex-center(1);
+
+    img{
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+  }
+}

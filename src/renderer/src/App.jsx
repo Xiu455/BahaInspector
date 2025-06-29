@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useSnapshot } from 'valtio'
 
+import { List, AutoSizer } from 'react-virtualized';
+
 import {  } from './@util/GlobalValtio'
 
 import { FSL, FSLCtrl } from './@cpn/FSL'
-import { List, AutoSizer } from 'react-virtualized';
+import Sidebar from './@cpn/Sidebar';
+
 
 import './App.scss'
 
@@ -27,7 +30,12 @@ function App(props){
 
   return (<>
     <FSL />
-    
+
+    <Sidebar />
+
+    <div className='func-page-area'>
+
+    </div>
   </>)
 }
 

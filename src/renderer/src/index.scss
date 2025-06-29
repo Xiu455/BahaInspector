@@ -42,6 +42,10 @@ body, #root{
   gap: 8px;
 }
 
+#root{
+  flex-direction: row;
+}
+
 a{
   font-weight: 500;
   color: rgb(100, 108, 255);
