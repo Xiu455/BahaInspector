@@ -11,9 +11,18 @@
 }
 
 .sidebar{
+  --c1: rgb(12, 12, 12);
+  --c2: rgb(0, 0, 0);
+
   width: clamp(200px, 20vw, 350px);
   height: 100vh;
-  background-color: #000000;
+  background: repeating-linear-gradient(
+    30deg,
+    var(--c1),               /* 灰色起點 */
+    var(--c1) 10px,          /* 灰色延伸到 20px */
+    var(--c2) 10px,                /* 黑色從 20px 開始 */
+    var(--c2) 15px                 /* 黑色延伸到 25px，總共5px */
+  );
 
   @include flex-center(2);
 
@@ -31,4 +40,47 @@
       object-fit: cover;
     }
   }
+}
+
+.button-area{
+  flex: 1;
+  @include flex-center(2);
+}
+
+
+.setting-btn{
+  width: 80%;
+  height: 30px;
+  background-color: rgb(0, 0, 0);
+
+  border: none;
+
+  margin-bottom: 15px;
+  padding: 10px 10px;
+  box-sizing: content-box;
+
+  @include flex-center();
+  justify-content: flex-start;
+
+  color: #ffffff;
+
+  gap: 20px;
+
+  transition: background-color 0.3s, color 0.3s, font-weight 0.3s;
+
+  span{
+    font-size: 1.2rem;
+    transform: translateY(-1px);
+  }
+
+  .icon{
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+}
+.setting-btn:hover{
+  background-color: rgb(255, 255, 255);
+  color: #000;
+  font-weight: 600;
 }
