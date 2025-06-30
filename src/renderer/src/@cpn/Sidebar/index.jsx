@@ -32,6 +32,7 @@ export default function Sidebar(){
         <BtnS1
           text='搜尋文章'
           icon={<i className='bx bx-article'></i> }
+          onClick={() => funcPageState.funcPage ='search'}
         />
       </FuncBtnBox>
     </div>
@@ -40,6 +41,7 @@ export default function Sidebar(){
 
     <button
       className="setting-btn fade-in"
+      onClick={() => funcPageState.funcPage = 'setting'}
     >
       <div className="icon"><i className='bxr bx-cog'></i></div>
       <span>設定</span>

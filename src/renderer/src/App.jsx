@@ -1,41 +1,57 @@
 import { useState, useEffect } from 'react'
 import { useSnapshot } from 'valtio'
 
-import { List, AutoSizer } from 'react-virtualized';
+import { List, AutoSizer } from 'react-virtualized'
 
-import {  } from './@util/GlobalValtio'
+import {
+  funcPageState,
+  configState,
+} from './@util/GlobalValtio'
 
 import { FSL, FSLCtrl } from './@cpn/FSL'
-import Sidebar from './@cpn/Sidebar';
+import Sidebar from './@cpn/Sidebar'
 
+import { SettingPage } from './@FPage'
 
 import './App.scss'
 
 const electron = window['electron'];  // 獲得後端溝通API
 
 function App(props){
+  const pageSnap = useSnapshot(funcPageState);
 
   useEffect(() => {
     const init = async () => {
       FSLCtrl.setMsg('讀取設定檔中...');
       const config = await electron.invoke('get-config');
+      Object.assign(configState, config)
+      console.log(configState);
 
       FSLCtrl.close();
     }
 
     init();
-  }, []);
 
-  const items = new Array(500).fill(0).map((_, index) => `Item ${index}`);
+    return () => {
+
+    }
+  }, []);
 
   return (<>
     <FSL />
 
     <Sidebar />
 
-    <div className='func-page-area'>
-
-    </div>
+    <div className='func-page-area'>{(() => {
+      switch(pageSnap.funcPage){
+        case 'search':
+          return <div>搜尋頁面</div>
+        case 'setting':
+          return <SettingPage />
+        default:
+          return <div>頁面不存在</div>
+      }
+    })()}</div>
   </>)
 }
 

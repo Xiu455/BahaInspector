@@ -6,5 +6,11 @@ export const loaddingState = proxy({
 })
 
 export const funcPageState = proxy({
-  funcPage: 'home'
+  funcPage: 'search'
 });
+
+export const configState = proxy({
+  BAHARUNE: '',
+  ConcurrencyCount: 5,
+  ConcurrencyDelay: 1000,
+})

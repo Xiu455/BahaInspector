@@ -28,6 +28,7 @@
 
   @include flex-center(2);
   align-items: flex-start;
+  flex-shrink: 0;
 
   position: relative;
 

@@ -39,8 +39,6 @@ body, #root{
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
-  gap: 8px;
 }
 
 #root{
@@ -59,6 +57,21 @@ a:hover {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+input{
+  outline: none;
+  border: none;
+  border-radius: .25em;
+
+  padding: .3em .5em;
+
+  letter-spacing: .05em;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 button {

@@ -1,0 +1,49 @@
+@mixin flex-center($mode: 1){
+  display: flex;
+  align-items: center;
+
+  @if $mode == 1{
+    justify-content: center;
+  }@else if $mode == 2{
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}
+
+.setting-page{
+  width: 100%;
+
+  padding: 0 10px;
+
+  @include flex-center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  gap: 30px;
+}
+
+.input{
+  width: 100%;
+  height: max-content;
+
+  @include flex-center(2);
+  align-items: flex-start;
+
+  position: relative;
+
+  input{
+    width: 100%;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .prompt{
+    user-select: none;
+    margin-left: 5px;
+    margin-bottom: 3px;
+
+    color: rgb(0, 225, 255);
+    font-size: .9rem;
+    font-weight: 600;
+  }
+}
