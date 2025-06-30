@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&family=Noto+Sans+TC:wght@100..900&display=swap');
+@import url('https://cdn.boxicons.com/fonts/basic/boxicons.min.css');
 
 @mixin flex-center($mode: 1){
   display: flex;
@@ -77,6 +78,9 @@ button {
 button:hover {
   border-color: rgb(100, 108, 255);
 }
+button:active{
+  transform: scale(0.99);
+}
 
 ::-webkit-scrollbar{
   --w: 5px;
@@ -86,4 +90,38 @@ button:hover {
 ::-webkit-scrollbar-thumb{
   background-color:rgb(121, 121, 121);
   border-radius: 99999px;
+}
+
+// 淡入動畫
+.fade-in{
+  animation: fade-in 0.75s ease-in-out;
+}
+
+// 分隔線
+[class^="sep-"]{
+  --s: 100%;
+  --n: 3px;
+
+  background-color: rgb(90, 90, 90, .9);
+  border-radius: 99999px;
+  margin: 10px 0;
+}
+.sep-w{
+  width: var(--s);
+  height: var(--n);
+}
+.sep-h{
+  width: var(--n);
+  height: var(--s);
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
