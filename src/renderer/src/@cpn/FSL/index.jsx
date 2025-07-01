@@ -7,8 +7,14 @@ import { loaddingState } from '../../@util/GlobalValtio'
 import './style.scss'
 
 export const FSLCtrl = {
-  open : () => { loaddingState.isloadding = true },
-  close : () => { loaddingState.isloadding = false },
+  open : (msg='') => {
+    loaddingState.isloadding = true;
+    loaddingState.message = msg;
+  },
+  close : () => {
+    loaddingState.isloadding = false;
+    loaddingState.message = '';
+  },
   toggle : () => { 
     loaddingState.isloadding = !loaddingState.isloadding;
   },

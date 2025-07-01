@@ -1,3 +1,5 @@
 {
-  
+  "BAHARUNE": "test",
+  "ConcurrencyCount": 5,
+  "ConcurrencyDelay": 1000
 }

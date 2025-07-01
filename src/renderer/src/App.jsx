@@ -24,8 +24,8 @@ function App(props){
     const init = async () => {
       FSLCtrl.setMsg('讀取設定檔中...');
       const config = await electron.invoke('get-config');
-      Object.assign(configState, config)
-      console.log(configState);
+      Object.assign(configState, config);
+      // console.log(configState);
 
       FSLCtrl.close();
     }
