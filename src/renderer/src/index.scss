@@ -105,6 +105,14 @@ button:active{
   border-radius: 99999px;
 }
 
+.Toastify__close-button{
+  display: none !important;
+}
+.Toastify__toast{
+  width: fit-content !important;
+  min-width: 200px; max-width: 500px !important;
+}
+
 // 淡入動畫
 .fade-in{
   animation: fade-in 0.75s ease-in-out;

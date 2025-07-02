@@ -45,6 +45,7 @@
   },
   "charset": "UTF-8",
   "dependencies": {
+    "cheerio": "^1.1.0",
     "electron-is-dev": "^2.0.0",
     "sass": "^1.89.2"
   }

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { snapshot } from 'valtio'
-import clsx from 'clsx';
-import _ from 'lodash';
+import { toast } from 'react-toastify'
+import clsx from 'clsx'
+import _ from 'lodash'
 
 import { configState } from '../../@util/GlobalValtio'
 
@@ -117,6 +118,18 @@ export default function SettingPage(){
     });
   }
 
+  // 檢查Token是否有效
+  const checkTokenClick = async () => {
+    FSLCtrl.open('檢查BAHARUNE Token中...');
+    const tokenStatus = await electron.invoke('check-token', { token: config.BAHARUNE });
+    if(tokenStatus){
+      toast.success('Token 有效', {toastId: 'token-success'});
+    }else{
+      toast.warn('Token 無效', {toastId: 'token-fail'});
+    }
+    FSLCtrl.close();
+  }
+
   useEffect(() => {
     const configObj = snapshot(configState);
     setIsChange(!_.isEqual(config, configObj));
@@ -165,7 +178,7 @@ export default function SettingPage(){
       >還原預設值</BtnS1>
 
       <BtnS1
-        // onClick={}
+        onClick={checkTokenClick}
       >驗證Token</BtnS1>
     </div>
   </div>)

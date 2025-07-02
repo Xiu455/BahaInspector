@@ -63,13 +63,19 @@ const keyReg = () => {
     app.on('ready', () => { app.locale = 'zh-TW'; });   // 設定語言
     await app.whenReady();  // 等待app準備好
 
+    mainWindow = new BrowserWindow(windowSetting1);
+
     Object.entries(ipcHandlers).forEach(([name, fn]) => {
         if(typeof fn !== 'function') return;
+
+        if(name === 'fromMain'){
+            fn({ mwin: mainWindow });
+            return;
+        }
 
         fn();
     });
 
-    mainWindow = new BrowserWindow(windowSetting1);
     if(isDev){
         await mainWindow.loadURL('http://localhost:3000/');
     }else{
