@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSnapshot } from 'valtio'
 
-import { List, AutoSizer } from 'react-virtualized'
+// import { List, AutoSizer } from 'react-virtualized'
 
 import {
   funcPageState,
@@ -11,7 +11,10 @@ import {
 import { FSL, FSLCtrl } from './@cpn/FSL'
 import Sidebar from './@cpn/Sidebar'
 
-import { SettingPage } from './@FPage'
+import {
+  SettingPage,
+  SearchPage,
+} from './@FPage'
 
 import './App.scss'
 
@@ -45,7 +48,7 @@ function App(props){
     <div className='func-page-area'>{(() => {
       switch(pageSnap.funcPage){
         case 'search':
-          return <div>搜尋頁面</div>
+          return <SearchPage />
         case 'setting':
           return <SettingPage />
         default:

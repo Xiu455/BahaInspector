@@ -48,10 +48,12 @@ const keyReg = () => {
                 restartApp();
                 break;
             case 'F12': // 開啟/關閉 開發模式
-                openDevToolsflag = !openDevToolsflag;
-                openDevToolsflag?
-                    mainWindow.webContents.openDevTools() :
+                event.preventDefault();
+                if(mainWindow.webContents.isDevToolsOpened()){
                     mainWindow.webContents.closeDevTools();
+                }else{
+                    mainWindow.webContents.openDevTools();
+                }
                 break;
         }
     });

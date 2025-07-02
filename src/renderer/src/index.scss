@@ -17,17 +17,17 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
 
-:root {
-  color: rgba(255, 255, 255, 0.99);
   font-family: "Noto Sans TC", Arial, sans-serif;
-  font-weight: 400;
   font-synthesis: none;
-
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root{
+  color: rgba(255, 255, 255, 0.99);
+  font-weight: 400;
 }
 
 body, #root{
