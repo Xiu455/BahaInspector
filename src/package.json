@@ -41,6 +41,7 @@
     "concurrently": "^8.2.2",
     "electron": "^33.3.1",
     "electron-builder": "^25.1.8",
+    "electron-rebuild": "^3.2.9",
     "electron-reloader": "^1.2.3"
   },
   "charset": "UTF-8",

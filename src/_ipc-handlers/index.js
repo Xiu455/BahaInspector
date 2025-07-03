@@ -82,11 +82,7 @@ exports.searchPost = () => {
       status: 'error',
       msg: '',
     }
-
-    // const checkResult = await checkTokenBH(config.BAHARUNE);
-    // if(!await checkTokenBH(config.BAHARUNE)){
-      
-    // }
+    const startTime = new Date();
 
     switch(true){
       case searchTarget === '':
@@ -108,7 +104,84 @@ exports.searchPost = () => {
       return result;
     }
 
-    result.bartexResult = bartexResult;
+    setLoadingMsg(`暫存資料中...`);
+
+    // 清空暫存資料表 save_tmp
+    db.prepare(/*SQL*/` DELETE FROM save_tmp`).run();
+
+    // 寫入資料庫
+    // 插入語句
+    const stmt = db.prepare(/*SQL*/`
+      INSERT INTO save_tmp (
+        search_target,
+        PostID, KanbanID, url,
+        title, content, dete, type,
+        gp, isRE
+      )VALUES(
+        :search_target,
+        :PostID, :KanbanID, :url,
+        :title, :content, :dete, :type,
+        :gp, :isRE
+      );
+    `);
+
+    // 大量資料插入
+    const insertData = db.transaction(() => {
+      bartexResult.postListData.forEach((postData, index) => {
+        const urlParams = postData.url_params || {};
+    
+        // 預先處理所有欄位資料型態 避免 undefined boolean object 等錯誤
+        const data = {
+          search_target: String(searchTarget ?? ''),
+          PostID: urlParams.PostID ?? null,
+          KanbanID: urlParams.KanbanID ?? null,
+          url: postData.url ?? '',
+          title: postData.title ?? '',
+          content: postData.content ?? '',
+          dete: (postData.dete instanceof Date)
+            ? postData.dete.toISOString()
+            : (postData.dete ?? ''),
+          type: postData.type ?? '',
+          gp: typeof postData.gp === 'number'
+            ? postData.gp
+            : parseInt(postData.gp) || 0,
+          isRE: postData.isRE ? 1 : 0,
+        };
+    
+        try{
+          stmt.run(data);
+        }catch(err){
+          console.error(`第 ${index + 1} 筆資料寫入錯誤:`, data, err);
+          throw err; // 丟回去讓 transaction 回滾
+        }
+      });
+    });
+
+    try{
+      insertData(); // 執行大量資料插入
+    }catch(err){
+      result.msg = `寫入資料庫失敗`;
+      console.error(err);
+      return result;
+    }
+
+    // 進行資料排序
+    const rows = db.prepare(/*SQL*/`
+      SELECT search_target,
+        PostID, KanbanID, url,
+        title, content, dete, type,
+        gp, isRE
+      FROM save_tmp
+      ORDER BY
+        dete DESC,     -- 根據 yyyy-mm-dd 排序(新到舊)
+        PostID DESC;    -- 日期時 使用 PostID 排序
+    `).all();
+
+    // result.bartexResult = bartexResult;
+    result.porcTime = ((new Date() - startTime) / 1000).toFixed(1);
+    result.searchTarget = searchTarget;
+    result.targetUrl = bartexResult.targetUrl;
+    result.postListData = rows;
     result.status = 'ok';
     return result;
   });
@@ -116,9 +189,11 @@ exports.searchPost = () => {
 
 exports.test = () => {
   ipcMain.handle('test', ( event, props ) => {
-    const rows = db.prepare(/*SQL*/`
-      SELECT * FROM save_tmp
-    `).all();
-    return rows;
+    // const rows = db.prepare(/*SQL*/`
+    //   SELECT * FROM save_tmp
+    // `).all();
+    // return rows;
+
+    return 'test';
   });
 }

@@ -34,16 +34,13 @@ export default function SearchPage(){
 
     FSLCtrl.close();
 
+    toast.success(`搜尋完成 (耗時 ${res.porcTime}s)`);
+
     console.log(res);
 
     // funcPageState.searchBtn = 'result';
     // funcPageState.funcPage ='result';
   };
-
-  const test = async () => {
-    const res = await electron.invoke('test');
-    console.log(res);
-  }
 
   return(<div className="search-page">
     <div className="logo"><img src="./img/telescope.svg" alt="logo" draggable="false"/></div>
@@ -58,6 +55,6 @@ export default function SearchPage(){
       />
       {/* <button className="search-btn"><i className='bx  bx-arrow-right'  ></i> </button> */}
     </div>
-    <button onClick={test}>測試</button>
+    {/* <button onClick={test}>測試</button> */}
   </div>)
 }
