@@ -191,6 +191,7 @@ const createBartex = (options) => {
             );
         }
 
+        completedCount = 0;
         const postListData = await runWithConcurrencyLimit(tasks, worker, () => {
             completedCount++;
 

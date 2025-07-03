@@ -37,7 +37,7 @@ function App(props){
       }else{
         const tokenStatus = await electron.invoke('check-token', { token: configState.BAHARUNE });
         if(!tokenStatus){
-          toast.warn('BAHARUNE Token 已失效 請重新設定', {toastId: 'token-fail'});
+          toast.warn('BAHARUNE Token 已失效 請重新設定', {toastId: 'token-fail', autoClose: false});
         }
       }
 

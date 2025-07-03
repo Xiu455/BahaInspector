@@ -3,6 +3,8 @@ import { snapshot } from 'valtio'
 import { toast } from 'react-toastify'
 import clsx from 'clsx'
 
+import { funcPageState } from '../../@util/GlobalValtio'
+
 import { FSLCtrl } from '../../@cpn/FSL'
 
 import './style.scss'
@@ -22,9 +24,20 @@ export default function SearchPage(){
 
     FSLCtrl.open('搜索中...');
 
-    await electron.invoke('search-post', { searchTarget: value });
+    const res = await electron.invoke('search-post', { searchTarget: value });
+
+    if(res.status == 'error'){
+      toast.error(res.msg, { toastId: "search-error" });
+      FSLCtrl.close();
+      return;
+    }
 
     FSLCtrl.close();
+
+    console.log(res);
+
+    // funcPageState.searchBtn = 'result';
+    // funcPageState.funcPage ='result';
   };
 
   return(<div className="search-page">

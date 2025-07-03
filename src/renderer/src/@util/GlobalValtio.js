@@ -6,7 +6,8 @@ export const loaddingState = proxy({
 })
 
 export const funcPageState = proxy({
-  funcPage: 'search'
+  funcPage: 'search',
+  searchBtn: 'search',
 });
 
 export const configState = proxy({

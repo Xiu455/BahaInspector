@@ -1,3 +1,4 @@
+import { useSnapshot } from 'valtio'
 import { funcPageState } from '../../@util/GlobalValtio'
 
 import './style.scss'
@@ -26,13 +27,15 @@ const BtnS1 = (props) => {
 }
 
 export default function Sidebar(){
+  const funcPageSnap = useSnapshot(funcPageState);
+
   return(<div className="sidebar">
     <div className="button-area">
       <FuncBtnBox title="功能頁">
         <BtnS1
           text='搜尋文章'
           icon={<i className='bx bx-article'></i> }
-          onClick={() => funcPageState.funcPage ='search'}
+          onClick={() => funcPageState.funcPage = funcPageSnap.searchBtn}
         />
       </FuncBtnBox>
     </div>
