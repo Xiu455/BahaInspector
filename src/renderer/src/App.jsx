@@ -27,10 +27,12 @@ function App(props){
 
   useEffect(() => {
     const init = async () => {
+      // 讀取設定檔
       FSLCtrl.setMsg('讀取設定檔中...');
       const config = await electron.invoke('get-config');
       Object.assign(configState, config);
 
+      // 確認 BAHARUNE Token 有效性
       FSLCtrl.setMsg('檢查BAHARUNE Token中...');
       if(configState.BAHARUNE === ''){
         toast.warn('尚未設定 BAHARUNE Token 請前往設定頁面設定', {toastId: 'token-warn'});

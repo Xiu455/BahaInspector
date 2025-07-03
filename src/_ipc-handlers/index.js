@@ -1,8 +1,10 @@
 const fs = require('fs')
 const path = require('path')
+
 const { ipcMain } = require('electron')
 const isDev = require('electron-is-dev')
-const { checkTokenBH, createBartex } = require('../_lib/Bartex');
+const Database = require('better-sqlite3');
+const { checkTokenBH, createBartex } = require('../_lib/Bartex')
 
 const ROOTDIR = isDev?
   process.cwd() :
@@ -11,6 +13,9 @@ const ROOTDIR = isDev?
 // 讀取設定檔
 const configData = fs.readFileSync(path.join(ROOTDIR, '_data/config.json'), 'utf-8');
 let config = JSON.parse(configData);
+
+// 連線本機資料庫
+const db = new Database(path.join(ROOTDIR, '_data/save.db'));
 
 // 建立並設定 Bartex 物件
 const bartex = createBartex({
@@ -106,5 +111,14 @@ exports.searchPost = () => {
     result.bartexResult = bartexResult;
     result.status = 'ok';
     return result;
+  });
+}
+
+exports.test = () => {
+  ipcMain.handle('test', ( event, props ) => {
+    const rows = db.prepare(/*SQL*/`
+      SELECT * FROM save_tmp
+    `).all();
+    return rows;
   });
 }

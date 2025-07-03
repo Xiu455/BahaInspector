@@ -78,6 +78,7 @@ const keyReg = () => {
 
     if(isDev){
         await mainWindow.loadURL('http://localhost:3000/');
+        mainWindow.webContents.openDevTools();
     }else{
         await mainWindow.loadFile('dist/renderer/index.html');
     }

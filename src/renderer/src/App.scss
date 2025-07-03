@@ -11,8 +11,10 @@
 }
 
 .func-page-area{
-  width: 100%;
+  width: 100%; min-height: 220px;
   height: 100vh;
+
+  overflow-x: auto;
 
   @include flex-center();
 }

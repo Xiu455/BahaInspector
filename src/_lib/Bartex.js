@@ -124,7 +124,7 @@ const createBartex = (options) => {
             return{
                 url: url,
                 url_params:{
-                    kanbanID: paramsUrl.get('bsn'),
+                    KanbanID: paramsUrl.get('bsn'),
                     PostID: paramsUrl.get('sn') ?? paramsUrl.get('snA'),
                 },
                 title: title,

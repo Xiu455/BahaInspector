@@ -40,6 +40,11 @@ export default function SearchPage(){
     // funcPageState.funcPage ='result';
   };
 
+  const test = async () => {
+    const res = await electron.invoke('test');
+    console.log(res);
+  }
+
   return(<div className="search-page">
     <div className="logo"><img src="./img/telescope.svg" alt="logo" draggable="false"/></div>
     <div className="input-box fade-in">
@@ -53,5 +58,6 @@ export default function SearchPage(){
       />
       {/* <button className="search-btn"><i className='bx  bx-arrow-right'  ></i> </button> */}
     </div>
+    <button onClick={test}>測試</button>
   </div>)
 }
