@@ -47,11 +47,11 @@ body, #root{
 
 a{
   font-weight: 500;
-  color: rgb(100, 108, 255);
+  color: rgb(255, 255, 255);
   text-decoration: inherit;
 }
 a:hover {
-  color: rgb(83, 91, 242);
+  // color: rgb(83, 91, 242);
 }
 
 h1 {
@@ -134,6 +134,13 @@ button:active{
 .sep-h{
   width: var(--n);
   height: var(--s);
+}
+
+// 溢出省略
+.ellipsis{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 @keyframes fade-in {

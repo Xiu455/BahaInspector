@@ -130,7 +130,7 @@ const createBartex = (options) => {
                 title: title,
                 content: $e.find('.search-result_text').text().trim(),
                 type: tpye_date[0]?.trim(),
-                dete: tpye_date[1]?.replace('- ', '').trim(),
+                date: tpye_date[1]?.replace('- ', '').trim(),
                 gp: parseInt($e.find('.forum-textinfo span').eq(1).text().replace('GP', '').trim()),
                 isRE: title.startsWith('RE:'),
             };

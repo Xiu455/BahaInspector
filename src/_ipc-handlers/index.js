@@ -3,7 +3,7 @@ const path = require('path')
 
 const { ipcMain } = require('electron')
 const isDev = require('electron-is-dev')
-const Database = require('better-sqlite3');
+const db = require('../_utils/db')
 const { checkTokenBH, createBartex } = require('../_lib/Bartex')
 
 const ROOTDIR = isDev?
@@ -13,9 +13,6 @@ const ROOTDIR = isDev?
 // 讀取設定檔
 const configData = fs.readFileSync(path.join(ROOTDIR, '_data/config.json'), 'utf-8');
 let config = JSON.parse(configData);
-
-// 連線本機資料庫
-const db = new Database(path.join(ROOTDIR, '_data/save.db'));
 
 // 建立並設定 Bartex 物件
 const bartex = createBartex({
@@ -115,12 +112,12 @@ exports.searchPost = () => {
       INSERT INTO save_tmp (
         search_target,
         PostID, KanbanID, url,
-        title, content, dete, type,
+        title, content, date, type,
         gp, isRE
       )VALUES(
         :search_target,
         :PostID, :KanbanID, :url,
-        :title, :content, :dete, :type,
+        :title, :content, :date, :type,
         :gp, :isRE
       );
     `);
@@ -138,9 +135,9 @@ exports.searchPost = () => {
           url: postData.url ?? '',
           title: postData.title ?? '',
           content: postData.content ?? '',
-          dete: (postData.dete instanceof Date)
-            ? postData.dete.toISOString()
-            : (postData.dete ?? ''),
+          date: (postData.date instanceof Date)
+            ? postData.date.toISOString()
+            : (postData.date ?? ''),
           type: postData.type ?? '',
           gp: typeof postData.gp === 'number'
             ? postData.gp
@@ -167,21 +164,35 @@ exports.searchPost = () => {
 
     // 進行資料排序
     const rows = db.prepare(/*SQL*/`
-      SELECT search_target,
+      SELECT
         PostID, KanbanID, url,
-        title, content, dete, type,
+        title, content, date, type,
         gp, isRE
       FROM save_tmp
       ORDER BY
-        dete DESC,     -- 根據 yyyy-mm-dd 排序(新到舊)
+        date DESC,     -- 根據 yyyy-mm-dd 排序(新到舊)
         PostID DESC;    -- 日期時 使用 PostID 排序
     `).all();
 
+    // 計算文章類型統計
+    const typeNum = db.prepare(/*SQL*/`
+      SELECT type, COUNT(*) AS count
+      FROM save_tmp
+      GROUP BY type
+      ORDER BY count DESC
+    `).all();
+
     // result.bartexResult = bartexResult;
+
     result.porcTime = ((new Date() - startTime) / 1000).toFixed(1);
-    result.searchTarget = searchTarget;
-    result.targetUrl = bartexResult.targetUrl;
-    result.postListData = rows;
+
+    result.searchResult = {
+      searchTarget,
+      targetUrl: bartexResult.targetUrl,
+      postListData: rows,
+      typeNum,
+    }
+
     result.status = 'ok';
     return result;
   });
@@ -189,11 +200,6 @@ exports.searchPost = () => {
 
 exports.test = () => {
   ipcMain.handle('test', ( event, props ) => {
-    // const rows = db.prepare(/*SQL*/`
-    //   SELECT * FROM save_tmp
-    // `).all();
-    // return rows;
-
     return 'test';
   });
 }

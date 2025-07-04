@@ -3,7 +3,7 @@ import { snapshot } from 'valtio'
 import { toast } from 'react-toastify'
 import clsx from 'clsx'
 
-import { funcPageState } from '../../@util/GlobalValtio'
+import { funcPageState, searchResultState } from '../../@util/GlobalValtio'
 
 import { FSLCtrl } from '../../@cpn/FSL'
 
@@ -36,10 +36,11 @@ export default function SearchPage(){
 
     toast.success(`搜尋完成 (耗時 ${res.porcTime}s)`);
 
-    console.log(res);
+    // console.log(res);
+    Object.assign(searchResultState, res.searchResult);
 
-    // funcPageState.searchBtn = 'result';
-    // funcPageState.funcPage ='result';
+    funcPageState.searchBtn = 'result';
+    funcPageState.funcPage = 'result';
   };
 
   return(<div className="search-page">
@@ -55,6 +56,5 @@ export default function SearchPage(){
       />
       {/* <button className="search-btn"><i className='bx  bx-arrow-right'  ></i> </button> */}
     </div>
-    {/* <button onClick={test}>測試</button> */}
   </div>)
 }

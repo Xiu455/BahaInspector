@@ -1,15 +1,22 @@
 // @charset "UTF-8";
 
-const { join } = require('path');
-const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron');
-const isDev = require('electron-is-dev');
+const { join } = require('path')
+const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron')
+const isDev = require('electron-is-dev')
 
-const ipcHandlers = require('./_ipc-handlers/index');
+const db = require('./_utils/db')
+const ipcHandlers = require('./_ipc-handlers/index')
+
+const ROOTDIR = isDev?
+  process.cwd() :
+  path.join(process.cwd(),'resources/app');
+
+console.log('ROOTDIR:', ROOTDIR);
 
 let mainWindow;
 
 const windowSetting1 = {
-    width: 1000,                                                // 視窗預設寬度
+    width: 1000 + (isDev? 500 : 0),                             // 視窗預設寬度
     height: 600,                                                // 視窗預設高度
     minWidth: 1000,                                             // 最小寬度
     minHeight: 600,                                             // 最小高度
@@ -84,6 +91,18 @@ const keyReg = () => {
     }
 
     keyReg();  // 按鍵註冊
+
+    // 關閉應用時觸發
+    app.on('before-quit', () => {
+        try{
+            console.log('準備關閉應用 開始清理多餘資料...');
+            db.exec('VACUUM');
+            db.close();
+            console.log('✅ 資料庫清理完成');
+        }catch (err){
+            console.error('❌ 資料庫清理時發生錯誤:', err);
+        }
+    });
 
     // 關閉視窗時關閉應用
     app.on('window-all-closed', () => {

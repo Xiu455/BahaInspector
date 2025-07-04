@@ -15,6 +15,7 @@ import Sidebar from './@cpn/Sidebar'
 import {
   SettingPage,
   SearchPage,
+  ResultPage,
 } from './@FPage'
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -68,7 +69,7 @@ function App(props){
         case 'setting':
           return <SettingPage />
         default:
-          return <div>頁面不存在</div>
+          return <ResultPage />
       }
     })()}</div>
 
@@ -89,21 +90,3 @@ function App(props){
 }
 
 export default App
-
-{/* <div className="list">
-  <AutoSizer>
-    {({ height, width }) => (
-      <List
-        height={height}
-        width={width}
-        rowCount={items.length}
-        rowHeight={50}
-        rowRenderer={({ index, key, style }) => (
-          <div key={key} style={style}>
-            {items[index]}
-          </div>
-        )}
-      />
-    )}
-  </AutoSizer>
-</div> */}
