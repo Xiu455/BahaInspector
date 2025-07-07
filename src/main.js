@@ -1,5 +1,6 @@
 // @charset "UTF-8";
 
+const path = require('path')
 const { join } = require('path')
 const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron')
 const isDev = require('electron-is-dev')
