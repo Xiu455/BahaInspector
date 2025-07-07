@@ -1,8 +1,10 @@
 const fs = require('fs')
 const path = require('path')
 
-const { ipcMain } = require('electron')
+const { ipcMain, dialog } = require('electron')
 const isDev = require('electron-is-dev')
+const { Parser } = require('json2csv');
+
 const db = require('../_utils/db')
 const { checkTokenBH, createBartex } = require('../_lib/Bartex')
 
@@ -41,6 +43,19 @@ const setLoadingMsg = (msg) => {
   mainWindow.webContents.send('set-loading-msg', msg);
 }
 
+// 將物件轉換成CSV
+function convertToCSV(rows, fields) {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    throw new Error('輸入資料無效或為空陣列');
+  }
+
+  const selectedFields = fields || Object.keys(rows[0]);
+  const parser = new Parser({ fields: selectedFields });
+  const csv = parser.parse(rows);
+
+  return '\uFEFF' + csv;
+}
+
 // 傳送設定檔
 exports.getConfig = () => {
   ipcMain.handle('get-config', async (event, props) => {
@@ -70,6 +85,7 @@ exports.checkToken = () => {
     return result;
   });
 }
+
 
 // 搜尋文章
 exports.searchPost = () => {
@@ -170,8 +186,8 @@ exports.searchPost = () => {
         gp, isRE
       FROM save_tmp
       ORDER BY
-        date DESC,     -- 根據 yyyy-mm-dd 排序(新到舊)
-        PostID DESC;    -- 日期時 使用 PostID 排序
+        date DESC,    -- 根據 yyyy-mm-dd 排序(新到舊)
+        PostID DESC;  -- 日期相同時 使用 PostID 排序
     `).all();
 
     // 計算文章類型統計
@@ -191,10 +207,166 @@ exports.searchPost = () => {
       targetUrl: bartexResult.targetUrl,
       postListData: rows,
       typeNum,
+      postCount: rows.length,
+      isTmp: true,
     }
 
     result.status = 'ok';
     return result;
+  });
+}
+
+// 條件式搜尋文章列表
+ipcMain.handle('search', async (event, props) => {
+  const { searchTarget, isTmp, searchFilter } = props;
+  const { type, keyword, sort } = searchFilter;
+
+  const baseTable = isTmp ? 'save_tmp' : 'save';
+  let sql = /*SQL*/`
+    SELECT
+      PostID, KanbanID, url,
+      title, content, date, type,
+      gp, isRE,
+      ${keyword.length ? keyword.map((k, i) => `(title LIKE @kw${i})`).join(' + ') : '0'} AS titleHits,
+      ${keyword.length ? keyword.map((k, i) => `(content LIKE @kw${i})`).join(' + ') : '0'} AS contentHits
+    FROM ${baseTable}
+    WHERE 1 = 1
+  `;
+
+  const params = {};
+
+  // 處理 type 條件
+  if (type !== '-') {
+    sql += ` AND type = @type`;
+    params.type = type;
+  }
+
+  // 關鍵字過濾
+  if (keyword.length > 0) {
+    sql += ` AND (${keyword.map((k, i) => `(title LIKE @kw${i} OR content LIKE @kw${i})`).join(' OR ')})`;
+    keyword.forEach((kw, i) => {
+      params[`kw${i}`] = `%${kw}%`;
+    });
+  }
+
+  // 排序條件
+  sql += /*SQL*/`
+    ORDER BY
+      ${sort === 'gp' ? ' gp DESC, ' : ''}
+      titleHits DESC,
+      contentHits DESC,
+      date DESC,
+      PostID ASC
+  `;
+
+  const stmt = db.prepare(sql);
+  const rows = stmt.all(params);
+
+  return rows;
+});
+// 類型搜尋
+exports.typeSearch = () => {
+  ipcMain.handle('type-search', async (event, props) => {
+    const { searchTarget, type, isTmp } = props;
+
+    const rows = db.prepare(/*SQL*/`
+      SELECT 
+        PostID, KanbanID, url,
+        title, content, date, type,
+        gp, isRE
+      FROM ${isTmp? 'save_tmp' :'save'}
+      WHERE type = :type AND search_target = :searchTarget
+      ORDER BY
+        date DESC,    -- 根據 yyyy-mm-dd 排序(新到舊)
+        PostID DESC;  -- 日期時 使用 PostID 排序
+    `).all({ type, searchTarget });
+
+    return rows;
+  });
+}
+// 取得 目標 所有的文章(預設排序)
+exports.getAllPosts = () => {
+  ipcMain.handle('get-all-post-list', (event, props) => {
+    const { searchTarget, isTmp } = props;
+
+    const rows = db.prepare(/*SQL*/`
+      SELECT 
+        PostID, KanbanID, url,
+        title, content, date, type,
+        gp, isRE
+      FROM ${isTmp? 'save_tmp' : 'save'}
+      WHERE search_target = :searchTarget
+      ORDER BY
+        date DESC,    -- 根據 yyyy-mm-dd 排序(新到舊)
+        PostID DESC;  -- 日期時 使用 PostID 排序
+    `).all({ searchTarget });
+
+      return rows
+  })
+}
+// 依照 GP 排序
+exports.sortByGP = () => {
+  ipcMain.handle('sort-gp', (event, props) => {
+    const { searchTarget, isTmp } = props;
+    const rows = db.prepare(/*SQL*/`
+      SELECT 
+        PostID, KanbanID, url,
+        title, content, date, type,
+        gp, isRE
+      FROM ${isTmp? 'save_tmp' : 'save'}
+      WHERE search_target = :searchTarget
+      ORDER BY
+        gp DESC,      -- 根據 GP 排序(高到低)
+        date DESC,    -- 根據 yyyy-mm-dd 排序(新到舊)
+        PostID DESC;  -- 日期時 使用 PostID 排序
+    `).all({ searchTarget });
+
+    return rows;
+  })
+}
+
+// 下載文章清單
+exports.downloadPostList = () => {
+  ipcMain.handle('download-post-list', async (event, props) => {
+    let savePath = '';
+    const { searchTarget, isTmp, type } = props;
+
+    const selectedResult = await dialog.showOpenDialog({
+      properties: ['openDirectory']
+    });
+
+    // 若未選擇資料夾 則直接返回
+    if (selectedResult.canceled || selectedResult.filePaths.length === 0){
+      return;
+    }
+    const dirPath = selectedResult.filePaths[0];
+    
+    const rows = db.prepare(/*SQL*/`
+      SELECT 
+        PostID, KanbanID, url,
+        title, content, date, type,
+        gp, isRE
+      FROM ${isTmp? 'save_tmp' :'save'}
+      WHERE search_target = :searchTarget
+      ORDER BY
+        date DESC,    -- 根據 yyyy-mm-dd 排序(新到舊)
+        PostID DESC;  -- 日期時 使用 PostID 排序
+    `).all({ searchTarget });
+
+    switch(type){
+      case 'JSON':
+        savePath = path.join(dirPath, `${searchTarget}-文章清單.json`);
+        const jsonData = JSON.stringify(rows, null, 2);
+        fs.writeFileSync(savePath, jsonData, 'utf-8');
+        break;
+      case 'CSV':
+        savePath = path.join(dirPath, `${searchTarget}-文章清單.csv`);
+        const csvData = convertToCSV(rows);
+        fs.writeFileSync(savePath, csvData, 'utf-8');
+        break;
+    }
+
+    return true;
   });
 }
 

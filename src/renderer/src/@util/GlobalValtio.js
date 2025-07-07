@@ -19,10 +19,18 @@ export const configState = proxy({
   ConcurrencyDelay: 1000,
 });
 
+// 搜尋條件狀態
+export const searchFilterState = proxy({
+  type: '-',
+  keyword: [],
+  sort: '',
+});
 // 搜尋結果狀態
 export const searchResultState = proxy({
   searchTarget: '',
   targetUrl: '',
   postListData: [],
-  typeNum: {}, 
+  typeNum: {},
+  postCount: 0,
+  isTmp: false,
 });

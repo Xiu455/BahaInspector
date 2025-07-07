@@ -50,9 +50,9 @@ a{
   color: rgb(255, 255, 255);
   text-decoration: inherit;
 }
-a:hover {
-  // color: rgb(83, 91, 242);
-}
+// a:hover {
+//   color: rgb(83, 91, 242);
+// }
 
 h1 {
   font-size: 3.2em;
@@ -74,10 +74,11 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-button {
+button{
   background-color: rgb(249, 249, 249);
   cursor: pointer;
 
+  outline: none;
   border-radius: 8px;
   border: 1px solid transparent;
 
@@ -88,11 +89,17 @@ button {
   font-family: inherit;
   transition: border-color 0.25s;
 }
-button:hover {
+button:not(.btn-df):hover {
   border-color: rgb(100, 108, 255);
 }
-button:active{
+button:not(.btn-df):active{
   transform: scale(0.99);
+}
+button.btn-df{
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.99);
 }
 
 ::-webkit-scrollbar{

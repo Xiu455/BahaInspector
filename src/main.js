@@ -11,8 +11,6 @@ const ROOTDIR = isDev?
   process.cwd() :
   path.join(process.cwd(),'resources/app');
 
-console.log('ROOTDIR:', ROOTDIR);
-
 let mainWindow;
 
 const windowSetting1 = {
