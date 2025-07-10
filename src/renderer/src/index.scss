@@ -150,6 +150,16 @@ button.btn-df{
   text-overflow: ellipsis;
 }
 
+// 橫向置中flex
+.fc1{
+  @include flex-center(1);
+}
+
+// 垂直置中flex
+.fc2{
+  @include flex-center(2);
+}
+
 @keyframes fade-in {
   0% {
     opacity: 0;

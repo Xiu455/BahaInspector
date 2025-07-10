@@ -1,0 +1,14 @@
+.floating-walker{
+  opacity: .8;
+
+  pointer-events: none;
+  display: none;
+
+  position: fixed;
+    top: 0;
+    left: 0;
+
+  transition:
+    top 2s linear,
+    left 2s linear,
+}

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { snapshot } from 'valtio'
+import { useState, useEffect, use } from 'react'
+import { useSnapshot ,snapshot } from 'valtio'
 import { toast } from 'react-toastify'
 import clsx from 'clsx'
 import _ from 'lodash'
@@ -8,6 +8,7 @@ import { configState } from '../../@util/GlobalValtio'
 
 import { FSL, FSLCtrl } from '../../@cpn/FSL';
 import BtnS1 from '../../@cpn/Button/S1';
+import Link from '../../@cpn/Link'
 
 import './style.scss';
 
@@ -49,8 +50,27 @@ const Input = (props) => {
   </div>)
 }
 
+const SwBtn = (props) => {
+  const {
+    height,
+    prompt,
+    // id,
+    // className,
+    ...rest
+  } = props;
+
+  return (<div className="sw-btn-box">
+    <span className="prompt">{prompt}</span>
+    <label className="sw-btn" style={{height: `${height}`}}>
+      <div className="ball"></div>
+      <input type="checkbox" {...rest} />
+    </label>
+  </div>)
+}
+
 export default function SettingPage(){
   const configObj = snapshot(configState);
+  const configSnap = useSnapshot(configState);
 
   const [ config, setConfig ] = useState(configObj);
   const [ isChange, setIsChange ] = useState(false);
@@ -130,6 +150,13 @@ export default function SettingPage(){
     FSLCtrl.close();
   }
 
+  // 切換 Arisu 狀態
+  const toggleArisuClick = async (e) => {
+    configState.openArisu = e.target.checked;
+    await electron.invoke('save-config', snapshot(configState));
+    // console.log(snapshot(configState));
+  }
+
   useEffect(() => {
     const configObj = snapshot(configState);
     setIsChange(!_.isEqual(config, configObj));
@@ -180,6 +207,22 @@ export default function SettingPage(){
       <BtnS1
         onClick={checkTokenClick}
       >驗證Token</BtnS1>
+    </div>
+
+    <div className="link-area fc1">
+      <Link>如何獲得 BAHARUNE Token ?</Link>
+      <Link href="https://forum.gamer.com.tw/B.php?bsn=60076">前往場外</Link>
+    </div>
+
+    <div className="sep-w"></div>
+
+    <div className="config-sw-area">
+      <SwBtn
+        height="35px"
+        prompt=" 休眠 / 啟動 Arisu"
+        checked={configSnap.openArisu}
+        onChange={toggleArisuClick}
+      />
     </div>
   </div>)
 }

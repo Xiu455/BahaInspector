@@ -11,6 +11,7 @@ import {
 
 import { FSL, FSLCtrl } from './@cpn/FSL'
 import Sidebar from './@cpn/Sidebar'
+import Arisu from './@cpn/Arisu';
 
 import {
   SettingPage,
@@ -25,6 +26,7 @@ const electron = window['electron'];  // 獲得後端溝通API
 
 function App(props){
   const pageSnap = useSnapshot(funcPageState);
+  const configSnap = useSnapshot(configState);
 
   useEffect(() => {
     const init = async () => {
@@ -72,6 +74,8 @@ function App(props){
           return <ResultPage />
       }
     })()}</div>
+
+    { configSnap.openArisu && <Arisu /> }
 
     <FSL />
     <ToastContainer

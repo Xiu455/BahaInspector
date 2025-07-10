@@ -17,6 +17,7 @@ export const configState = proxy({
   BAHARUNE: '',
   ConcurrencyCount: 5,
   ConcurrencyDelay: 1000,
+  openArisu: true,
 });
 
 // 搜尋條件狀態

@@ -25,7 +25,7 @@ export const FSL = () => {
   const state = useSnapshot(loaddingState);
 
   return (<div id="FSL-1" className={clsx(state.isloadding? '' : 'hid')}>
-    <img src="./img/loading_d.svg" alt="loading" />
+    <img src="./img/Fern.webp" alt="loading" />
     <span>{ state.message }</span>
   </div>)
 }

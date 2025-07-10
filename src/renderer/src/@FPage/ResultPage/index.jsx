@@ -57,7 +57,7 @@ const TypeRank = ({ srSnap }) => {
           '場外綜合': 'rgb(28, 255, 198)',
           '政治議題': 'rgb(255, 72, 72)',
           '回收專區': 'rgb(0, 0, 0)',
-          '生活百態': 'rgb(255, 245, 230)',
+          '生活百態': 'rgb(250, 213, 158)',
           '新聞焦點': 'rgb(64, 0, 182)',
           '動漫遊戲': 'rgb(130, 180, 255)',
           '心情點滴': 'rgb(255, 200, 220)',
@@ -68,12 +68,12 @@ const TypeRank = ({ srSnap }) => {
           '吵架擂台': 'rgb(255, 100, 100)',
           '疑難求助': 'rgb(140, 220, 240)',
           '食趣旅遊': 'rgb(255, 180, 100)',
-          '板務公告': 'rgb(180, 180, 255)'
+          '板務公告': 'rgb(239, 255, 17)'
         };
 
         return(<button
           key={index}
-          className="type-rank-item btn-df"
+          className={clsx('type-rank-item ', 'btn-df', (searchFilterState.type === typeData.type) && "selected")}
           style={{
             '--ratio': ratioArr[index],
             '--bg-c': colorMap[typeData.type] || 'rgb(54, 208, 255)',
@@ -150,11 +150,17 @@ export default function ResultPage(){
     e = e.currentTarget;
     setKeywordIn(e.value);
 
-    let words = e.value.split(' ');
+    const regex = /[^\s"']+|"([^"]*)"|'([^']*)'/g;
+    let words = [];
+    let match;
+
+    while((match = regex.exec(e.value)) !== null){
+      words.push(match[0].replace(/"/g, ''));
+    }
+
     words = words.filter(word => word.trim() !== '');
 
     setKeyword(words);
-    // searchFilterState.keyword = words;
   }
   // 關鍵字搜尋
   const keywordSearch = async (e) => {
@@ -261,7 +267,7 @@ export default function ResultPage(){
 
     <div className="t2">
       <div className="post-list-box">
-        <div className="post-count">共 {srSnap.postListData.length} 篇文章</div>
+        <div className="post-count">已顯示 {srSnap.postListData.length} 篇文章</div>
         <div className="post-list">
           <AutoSizer>
             {({ height, width }) => (

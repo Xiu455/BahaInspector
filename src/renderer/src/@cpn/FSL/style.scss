@@ -31,11 +31,11 @@
   }
 
   img{
-    width: clamp(50px, 7vw, 80px);
+    width: clamp(50px, 10vw, 120px);
     aspect-ratio: 1 / 1;
     object-fit: cover;
 
-    animation: imgSpin 2s linear infinite;
+    // animation: imgSpin 2s linear infinite;
   }
 }
 #FSL-1.hid{
