@@ -1,4 +1,4 @@
 **/dist
 **/pack
 **/node_modules
-src/_data/config.json
+src/_data/*
