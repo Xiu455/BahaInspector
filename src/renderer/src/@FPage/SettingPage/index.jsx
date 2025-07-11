@@ -210,7 +210,7 @@ export default function SettingPage(){
     </div>
 
     <div className="link-area fc1">
-      <Link>如何獲得 BAHARUNE Token ?</Link>
+      <Link href="https://github.com/Xiu455/BahaInspector/">如何獲得 BAHARUNE Token ?</Link>
       <Link href="https://forum.gamer.com.tw/B.php?bsn=60076">前往場外</Link>
     </div>
 
