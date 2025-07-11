@@ -14,20 +14,21 @@
 ---
 
 ## 🔧 使用步驟
+1. 請先確保已登入巴哈帳號
 
-1. 前往巴哈姆特任一討論板，例如：[場外休憩區](https://forum.gamer.com.tw/B.php?bsn=60076)
+2. 前往巴哈姆特任一討論板，例如：[場外休憩區](https://forum.gamer.com.tw/B.php?bsn=60076)  
 
-2. 開啟 **開發者工具**：
+3. 開啟 **開發者工具**：
    在頁面空白處點右鍵選擇 `檢查`，或按下 `F12`
 
-3. 點選上方的「**應用程式（Application）**」分頁，
-   找到左側欄位中的 `Cookies`，展開 `forum.gamer.com.tw`
+4. 點選上方的「**應用程式（Application）**」分頁，
+   找到左側欄位中的 `Cookies`，展開 `forum.gamer.com.tw`  
    ![圖1](/img/1.png)
 
-4. 找到名為 `**BAHARUNE**` 的 Cookie 並**複製其值**
+5. 找到名為 `**BAHARUNE**` 的 Cookie 並**複製其值**
    ![圖2](/img/2.png)
 
-5. 開啟本工具 → 點選左下角的 `設定`，
+6. 開啟本工具 → 點選左下角的 `設定`，
    將剛才複製的值貼到 `BAHARUNE Token` 欄位，並按下 `儲存` 即可開始使用！
 
 ---
