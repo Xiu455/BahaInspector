@@ -37,7 +37,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "it's a app",
+  "description": "BahaInspector",
   "devDependencies": {
     "concurrently": "^8.2.2",
     "electron": "^33.3.1",
