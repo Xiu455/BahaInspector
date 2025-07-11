@@ -11,7 +11,7 @@
     "install:all": "npm install && cd renderer && npm install"
   },
   "build": {
-    "appId": "com.example.app",
+    "appId": "https://home.gamer.com.tw/profile/index.php?&owner=abz093764953",
     "productName": "BahaInspector",
     "directories": {
       "output": "pack"
@@ -27,6 +27,7 @@
     ],
     "asar": false,
     "win": {
+      "icon": "logo.ico",
       "target": [
         "portable",
         "dir"
