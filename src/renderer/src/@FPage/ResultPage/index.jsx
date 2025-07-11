@@ -12,6 +12,7 @@ import {
 
 import { FSLCtrl } from '../../@cpn/FSL'
 import Link from '../../@cpn/Link'
+import RatioBar from '../../@cpn/RatioBar'
 
 import './style.scss'
 
@@ -48,7 +49,7 @@ const TypeRank = ({ srSnap }) => {
   }
 
   return (<div className="type-rank-box">
-    <div className="post-total">文章總數: {searchResultState.postCount}</div>
+    {/* <div className="post-total">文章總數: {searchResultState.postCount}</div> */}
     <div className="type-rank">
       {srSnap.typeNum.map(( typeData, index ) => {
         const ratio = (typeData.count / srSnap.postCount) * 100;
@@ -70,24 +71,104 @@ const TypeRank = ({ srSnap }) => {
           '食趣旅遊': 'rgb(255, 180, 100)',
           '板務公告': 'rgb(239, 255, 17)'
         };
-
+        
         return(<button
           key={index}
-          className={clsx('type-rank-item ', 'btn-df', (searchFilterState.type === typeData.type) && "selected")}
-          style={{
-            '--ratio': ratioArr[index],
-            '--bg-c': colorMap[typeData.type] || 'rgb(54, 208, 255)',
-          }}
+          className={clsx('type-rank-item btn-df', (searchFilterState.type === typeData.type) && "selected")}
           data-type={typeData.type}
           onClick={typeSearch}
         >
-          <span className="type-name">{typeData.type || '空白'}</span>
-          <div className="type-count">
-            {typeData.count} | <span className="type-ratio">{ratio.toFixed(1)}%</span>
-          </div>
+          <RatioBar
+            ratio={ratioArr[index]}
+            bgc={colorMap[typeData.type] || 'rgb(54, 208, 255)'}
+          >
+            <span className="type-name">{typeData.type || '空白'}</span>
+            <div className="type-count">
+              {typeData.count} | <span className="type-ratio">{ratio.toFixed(1)}%</span>
+            </div>
+          </RatioBar>
         </button>)
       })}
     </div>
+  </div>)
+}
+
+const PostInfo = ({ srSnap }) => {
+  const [ postInfo, setPostInfo ] = useState({
+    NRE:{
+      count: 0,
+      count_ratio: 0,
+      gp: 0,
+      gp_ratio: 0,
+    },
+    RE:{
+      count: 0,
+      count_ratio: 0,
+      gp: 0,
+      gp_ratio: 0,
+    },
+  });
+
+  useEffect(() => {
+    setPostInfo({
+      NRE:{
+        count: srSnap.postInfo.NRE_count,
+        count_ratio: (srSnap.postInfo.NRE_count / srSnap.postCount) * 100,
+        gp: srSnap.postInfo.NRE_gp,
+        gp_ratio: (srSnap.postInfo.NRE_gp / srSnap.postInfo.total_gp) * 100,
+      },
+      RE:{
+        count: srSnap.postInfo.RE_count,
+        count_ratio: (srSnap.postInfo.RE_count / srSnap.postCount) * 100,
+        gp: srSnap.postInfo.RE_gp,
+        gp_ratio: (srSnap.postInfo.RE_gp / srSnap.postInfo.total_gp) * 100,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(postInfo);
+  }, [postInfo]);
+
+  return (<div className="post-info-box fc2">
+      <div className="post-info-total fc1">
+        <span>文章總數: {srSnap.postCount}</span>
+        <span>GP總數: {srSnap.postInfo.total_gp}</span>
+      </div>
+
+      <div className="post-info-postCount fc2">
+        <RatioBar ratio={postInfo.NRE.count_ratio} bgc="rgb(0, 140, 255)">
+          <div className="post-info-item">
+            發文數 
+            <span className="num">{postInfo.NRE.count} |</span> 
+            <span className="ratio">{postInfo.NRE.count_ratio.toFixed(1)}%</span>
+          </div>
+        </RatioBar>
+        <RatioBar ratio={postInfo.RE.count_ratio} bgc="rgb(179, 47, 255)">
+          <div className="post-info-item">
+            回應數
+            <span className="num">{postInfo.RE.count} |</span>
+            <span className="ratio">{postInfo.RE.count_ratio.toFixed(1)}%</span>
+          </div>
+        </RatioBar>
+      </div>
+
+      <div className="post-info-gp fc2">
+        <RatioBar ratio={postInfo.NRE.gp_ratio} bgc="rgb(0, 140, 255)">
+          <div className="post-info-item">
+            發文總GP
+            <span className="num">{postInfo.NRE.gp} |</span>
+            <span className="ratio">{postInfo.NRE.gp_ratio.toFixed(1)}%</span>
+          </div>
+        </RatioBar>
+        <RatioBar ratio={postInfo.RE.gp_ratio} bgc="rgb(179, 47, 255)">
+          <div className="post-info-item">
+            回應總GP
+            <span className="num">{postInfo.RE.gp} |</span>
+            <span className="ratio">{postInfo.RE.gp_ratio.toFixed(1)}%</span>
+          </div>
+        </RatioBar>
+      </div>
   </div>)
 }
 
@@ -299,6 +380,7 @@ export default function ResultPage(){
 
     <div className="t3">
       <TypeRank srSnap={srSnap} />
+      <PostInfo srSnap={srSnap} />
     </div>
 
     <FShow />

@@ -1,0 +1,48 @@
+@mixin flex-center($mode: 1){
+  display: flex;
+  align-items: center;
+
+  @if $mode == 1{
+    justify-content: center;
+  }@else if $mode == 2{
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}
+
+.ratio-bar{
+  --ratio: 0;
+  --bg-c: rgb(54, 208, 255);
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 3px;
+  padding: 0 5px;
+
+  @include flex-center();
+
+  position: relative;
+
+  color: rgb(206, 206, 206);
+
+  &::before{
+    content: "";
+    width: calc(var(--ratio) * 1%);
+    height: 100%;
+    background-color: var(--bg-c);
+    border-radius: 3px;
+    filter: brightness(0.5);
+
+    position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+
+    transition: width 1s ease;
+  }
+
+  &>*{
+    z-index: 1;
+  }
+}

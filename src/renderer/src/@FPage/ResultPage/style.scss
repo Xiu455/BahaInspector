@@ -238,6 +238,8 @@
 
 .t3{
   @include flex-center(2);
+  
+  gap: var(--gap);
 }
 
 .ReactVirtualized__Grid::-webkit-scrollbar {
@@ -330,7 +332,6 @@
 
   font-size: .9rem;
 
-
   .post-total{
     width: 100%;
   }
@@ -342,50 +343,31 @@
     gap: 5px;
 
     .type-rank-item{
-      --ratio: 0;
-      --bg-c: rgb(54, 208, 255);
-
       width: 100%;
       height: 25px;
-      border-radius: 3px;
-      padding: 0 5px;
+
       @include flex-center();
 
-      position: relative;
+      .ratio-bar{
 
-      color: rgb(206, 206, 206);
 
-      &::before{
-        content: "";
-        width: calc(var(--ratio) * 1%);
-        height: 100%;
-        background-color: var(--bg-c);
-        border-radius: 3px;
-        filter: brightness(0.5);
+        .type-name, .type-count{
+          mix-blend-mode: hard-light;
+          text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+        }
+        
+        .type-name{
+          margin-right: auto;
+        }
+        
+        .type-count{
+          display: flex;
 
-        position: absolute;
-          top: 0;
-          left: 0;
-
-        transition: width 1s ease;
-      }
-
-      .type-name, .type-count{
-        mix-blend-mode: hard-light;
-        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-      }
-
-      .type-name{
-        margin-right: auto;
-      }
-
-      .type-count{
-        display: flex;
-
-        .type-ratio{
-          width: 5.7ch;
-          display: block;
-          text-align: right;
+          .type-ratio{
+            width: 5.7ch;
+            display: block;
+            text-align: right;
+          }
         }
       }
     }
@@ -395,6 +377,63 @@
     .type-rank-item.selected{
       filter: brightness(1.2);
     }
+  }
+}
+
+.post-info-box{
+  width: 100%;
+  height: max-content;
+  background-color: var(--bg-c);
+
+  border-radius: var(--br);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+
+  padding: 10px;
+  gap: 15px;
+
+  font-size: .9rem;
+
+  .post-info-total{
+    width: 100%;
+
+    @include flex-center();
+    justify-content: space-evenly;
+  }
+
+  .ratio-bar{
+    height: 25px;
+
+    color: rgb(255, 255, 255);
+
+    &::before{
+      filter: brightness(1);
+
+      box-shadow: 0 0 2px var(--bg-c);
+    }
+
+    .post-info-item{
+      width: 100%;
+      @include flex-center();
+    }
+
+    .num{
+      margin-left: auto;
+    }
+
+    .ratio{
+      width: 5.7ch;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  .sep-w{
+    margin: 5px 0;
+  }
+
+  .post-info-postCount, .post-info-gp{
+    width: 100%;
+    gap: 5px;
   }
 }
 
@@ -533,8 +572,8 @@
     height: 300px;
     flex-direction: row;
 
-    .type-rank-box{
-      width: 400px;
+    &>div{
+      // width: 400px;
       height: 100%;
 
       overflow-y: auto;

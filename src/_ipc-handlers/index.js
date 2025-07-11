@@ -86,7 +86,6 @@ exports.checkToken = () => {
   });
 }
 
-
 // 搜尋文章
 exports.searchPost = () => {
   ipcMain.handle('search-post', async (event, props) => {
@@ -198,6 +197,17 @@ exports.searchPost = () => {
       ORDER BY count DESC
     `).all();
 
+    // 獲取文章資訊
+    const postInfo = db.prepare(/*SQL*/`
+      SELECT 
+        SUM(gp) AS total_gp,
+        SUM(CASE WHEN isRE = 0 THEN 1 ELSE 0 END) AS NRE_count,
+        SUM(CASE WHEN isRE = 1 THEN 1 ELSE 0 END) AS RE_count,
+        SUM(CASE WHEN isRE = 0 THEN gp ELSE 0 END) AS NRE_gp,
+        SUM(CASE WHEN isRE = 1 THEN gp ELSE 0 END) AS RE_gp
+      FROM save_tmp
+    `).get();
+
     // result.bartexResult = bartexResult;
 
     result.porcTime = ((new Date() - startTime) / 1000).toFixed(1);
@@ -208,6 +218,7 @@ exports.searchPost = () => {
       postListData: rows,
       typeNum,
       postCount: rows.length,
+      postInfo,
       isTmp: true,
     }
 
