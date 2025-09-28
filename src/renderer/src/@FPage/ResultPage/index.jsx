@@ -126,10 +126,6 @@ const PostInfo = ({ srSnap }) => {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(postInfo);
-  }, [postInfo]);
-
   return (<div className="post-info-box fc2">
       <div className="post-info-total fc1">
         <span>文章總數: {srSnap.postCount}</span>
