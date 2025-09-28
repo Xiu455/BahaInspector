@@ -1,11 +1,12 @@
 {
   "name": "BahaInspector",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "main.js",
   "scripts": {
     "react": "cd renderer && npx vite",
     "electron": "chcp 65001 && electron .",
-    "dev": "concurrently \"npm:electron\" \"npm:react\"",
+    "======================": "echo \"This is dividing line\" && exit 1",
+    "dev": " concurrently \"npm:react\" \"npm:electron\" ",
     "vite:build": "cd renderer && npx vite build",
     "build": "cd renderer && npx vite build && cd ../ && electron-builder",
     "install:all": "npm install && cd renderer && npm install"
@@ -14,7 +15,7 @@
     "appId": "https://home.gamer.com.tw/profile/index.php?&owner=abz093764953",
     "productName": "BahaInspector",
     "directories": {
-      "output": "pack"
+      "output": "../pack"
     },
     "files": [
       "**/*",
@@ -29,7 +30,6 @@
     "win": {
       "icon": "logo.ico",
       "target": [
-        "portable",
         "dir"
       ]
     }
@@ -40,10 +40,11 @@
   "description": "BahaInspector",
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "electron": "^33.3.1",
+    "electron": "^38.1.2",
     "electron-builder": "^25.1.8",
     "electron-rebuild": "^3.2.9",
-    "electron-reloader": "^1.2.3"
+    "electron-reloader": "^1.2.3",
+    "node-abi": "^4.14.0"
   },
   "charset": "UTF-8",
   "dependencies": {
