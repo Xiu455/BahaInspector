@@ -2,20 +2,23 @@
 
 const path = require('path')
 const { join } = require('path')
-const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron')
+const {
+    app, BrowserWindow,
+    // ipcMain, dialog, globalShortcut
+} = require('electron')
 const isDev = require('electron-is-dev')
 
-const db = require('./_utils/db')
-const ipcHandlers = require('./_ipc-handlers/index')
+let db = null;
+let ipcHandlers = null;
 
-const ROOTDIR = isDev?
-  process.cwd() :
-  path.join(process.cwd(),'resources/app');
+// const ROOTDIR = isDev?
+//   process.cwd() :
+//   path.join(process.cwd(),'resources/app');
 
 let mainWindow;
 
 const windowSetting1 = {
-    width: 1000 + (isDev? 500 : 0),                             // 視窗預設寬度
+    width: 1000,                                                // 視窗預設寬度
     height: 600,                                                // 視窗預設高度
     minWidth: 1000,                                             // 最小寬度
     minHeight: 600,                                             // 最小高度
@@ -30,6 +33,10 @@ const windowSetting1 = {
     autoHideMenuBar: true,                                      // 是否隱藏選單
 }
 
+const devToolsSetting = {
+    mode: 'detach',
+}
+
 function restartApp() {
     app.relaunch();
     app.exit();
@@ -39,10 +46,9 @@ function restartApp() {
     按鍵註冊
 */
 const keyReg = () => {
-    let openDevToolsflag = false;
-
     mainWindow.webContents.on('before-input-event', (event, input) => {
         if(input.type !== 'keyDown'){ return; }
+
         switch(input.key){
             case 'F5':  // 刷新畫面
                 event.preventDefault();
@@ -58,7 +64,7 @@ const keyReg = () => {
                 if(mainWindow.webContents.isDevToolsOpened()){
                     mainWindow.webContents.closeDevTools();
                 }else{
-                    mainWindow.webContents.openDevTools();
+                    mainWindow.webContents.openDevTools(devToolsSetting); 
                 }
                 break;
         }
@@ -66,40 +72,47 @@ const keyReg = () => {
 }
 
 (async () => {
-    app.on('ready', () => { app.locale = 'zh-TW'; });   // 設定語言
+    app.locale = 'zh-TW';
+    app.commandLine.appendSwitch('lang', 'zh-TW');
     await app.whenReady();  // 等待app準備好
-
     mainWindow = new BrowserWindow(windowSetting1);
 
-    Object.entries(ipcHandlers).forEach(([name, fn]) => {
-        if(typeof fn !== 'function') return;
-
-        if(name === 'fromMain'){
-            fn({ mwin: mainWindow });
-            return;
-        }
-
-        fn();
-    });
+    keyReg();   // 按鍵註冊
 
     if(isDev){
+        mainWindow.webContents.openDevTools(devToolsSetting); 
         await mainWindow.loadURL('http://localhost:3000/');
-        mainWindow.webContents.openDevTools();
     }else{
         await mainWindow.loadFile('dist/renderer/index.html');
     }
 
-    keyReg();  // 按鍵註冊
+    setImmediate(() => {
+        db = require('./_utils/db');
+        ipcHandlers = require('./_ipc-handlers/index');
+
+        // 初始化 IPC 事件
+        Object.entries(ipcHandlers).forEach(([name, fn]) => {
+            if(typeof fn !== 'function') return;
+
+            if(name === 'fromMain'){
+                fn({ mwin: mainWindow });
+                return;
+            }
+
+            fn();
+        });
+    });
 
     // 關閉應用時觸發
     app.on('before-quit', () => {
         try{
-            console.log('準備關閉應用 開始清理多餘資料...');
+            isDev && console.log('準備關閉應用 開始清理多餘資料...');
+            db.prepare(`DELETE FROM save_tmp`).run();
             db.exec('VACUUM');
             db.close();
-            console.log('✅ 資料庫清理完成');
+            isDev && console.log('✅ 資料庫清理完成');
         }catch (err){
-            console.error('❌ 資料庫清理時發生錯誤:', err);
+            isDev && console.error('❌ 資料庫清理時發生錯誤:', err);
         }
     });
 
