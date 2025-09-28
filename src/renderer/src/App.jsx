@@ -24,6 +24,19 @@ import './App.scss'
 
 const electron = window['electron'];  // 獲得後端溝通API
 
+// 獲取設定檔 (失敗重試)
+const getConfig = async () => {
+  let config = null;
+  while(!config){
+    try{
+      const config = await electron.invoke('get-config');
+      return config;
+    }catch(err){
+      await new Promise(resolve => setTimeout(resolve, 300));
+    }
+  }
+}
+
 function App(props){
   const pageSnap = useSnapshot(funcPageState);
   const configSnap = useSnapshot(configState);
@@ -32,7 +45,7 @@ function App(props){
     const init = async () => {
       // 讀取設定檔
       FSLCtrl.setMsg('讀取設定檔中...');
-      const config = await electron.invoke('get-config');
+      const config = await getConfig();
       Object.assign(configState, config);
 
       // 確認 BAHARUNE Token 有效性
@@ -85,7 +98,7 @@ function App(props){
       newestOnTop={false}
       closeOnClick
       rtl={false}
-      pauseOnFocusLoss
+      pauseOnFocusLoss={false}
       draggable
       pauseOnHover
       theme="dark"
