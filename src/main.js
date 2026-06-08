@@ -4,7 +4,7 @@ import path from 'path'
 import { fileURLToPath } from 'node:url'
 
 import { 
-    app, BrowserWindow,
+    app, BrowserWindow, Menu,
     // ipcMain, dialog, globalShortcut 
 } from 'electron'
 import isDev from 'electron-is-dev'
@@ -46,9 +46,7 @@ function restartApp() {
     app.exit();
 }
 
-/**
-    按鍵註冊
-*/
+// 按鍵註冊
 const keyReg = () => {
     mainWindow.webContents.on('before-input-event', (event, input) => {
         if(input.type !== 'keyDown'){ return; }
@@ -75,13 +73,40 @@ const keyReg = () => {
     });
 }
 
+// 右鍵選單註冊
+const menuReg = () => {
+    mainWindow.webContents.on('context-menu', (event, params) => {
+        if(params.isEditable){
+            Menu.buildFromTemplate([
+                { 
+                    label: '複製', 
+                    role: 'copy',
+                },
+                { 
+                    label: '貼上', 
+                    role: 'paste',
+                },
+                { 
+                    label: '剪下', 
+                    role: 'cut',
+                },
+                {
+                    label: '全選', 
+                    role: 'selectAll',
+                }
+            ]).popup();
+        }
+    });
+}
+
 (async () => {
     app.locale = 'zh-TW';
     app.commandLine.appendSwitch('lang', 'zh-TW');
     await app.whenReady();  // 等待app準備好
     mainWindow = new BrowserWindow(windowSetting1);
 
-    keyReg();   // 按鍵註冊
+    keyReg();
+    menuReg();
 
     if(isDev){
         mainWindow.webContents.openDevTools(devToolsSetting); 

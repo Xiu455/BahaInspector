@@ -167,7 +167,8 @@ export default function SettingPage(){
         width="100%"
         prompt="BAHARUNE Token"
         name="BAHARUNE"
-        value={configSnap.BAHARUNE}
+        defaultValue={configSnap.BAHARUNE}
+        _value={configSnap.BAHARUNE}
         onChange={handleConfigChange}
       />
 
