@@ -3,7 +3,7 @@ import { proxy } from 'valtio'
 // loadding狀態
 export const loaddingState = proxy({
   isloadding: false,
-  message: ''
+  message: null,
 })
 
 // 功能頁面狀態

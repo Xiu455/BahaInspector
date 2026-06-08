@@ -26,6 +26,6 @@ export const FSL = () => {
 
   return (<div id="FSL-1" className={clsx(state.isloadding? '' : 'hid')}>
     <img src="./img/Fern.webp" alt="loading" />
-    <span>{ state.message }</span>
+    <span>{ state.message ? state.message : '載入中...' }</span>
   </div>)
 }

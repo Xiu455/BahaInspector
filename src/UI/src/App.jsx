@@ -32,7 +32,7 @@ const getConfig = async () => {
       const config = await electron.invoke('get-config');
       return config;
     }catch(err){
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
 }
@@ -45,6 +45,7 @@ function App(props){
     const init = async () => {
       // 讀取設定檔
       FSLCtrl.setMsg('讀取設定檔中...');
+      FSLCtrl.open();
       const config = await getConfig();
       Object.assign(configState, config);
 

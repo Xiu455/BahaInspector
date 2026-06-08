@@ -1,15 +1,19 @@
 // @charset "UTF-8";
 
-const path = require('path')
-const { join } = require('path')
-const {
-    app, BrowserWindow,
-    // ipcMain, dialog, globalShortcut
-} = require('electron')
-const isDev = require('electron-is-dev')
+import path from 'path'
+import { fileURLToPath } from 'node:url'
 
-let db = null;
-let ipcHandlers = null;
+import { 
+    app, BrowserWindow,
+    // ipcMain, dialog, globalShortcut 
+} from 'electron'
+import isDev from 'electron-is-dev'
+
+import db from './_lib/db.js'
+// import { fromMain } from './_ipc-handlers/index.js'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // const ROOTDIR = isDev?
 //   process.cwd() :
@@ -25,7 +29,7 @@ const windowSetting1 = {
     // x: 100,                                                     // x預設位置
     // y: 100,                                                     // y預設位置
     webPreferences: {
-        preload: join(__dirname, 'preload.js'),                 // 預先引入
+        preload: path.join(__dirname, 'preload.js'),                 // 預先引入
         devTools: true,                                         // 是否啟用devTools
         nodeIntegration: true,                                  // 是否允許渲染進程中使用Node.js模組
         enableRemoteModule: true,                               // 是否允許渲染進程中可以使用主進程的模組
@@ -86,28 +90,16 @@ const keyReg = () => {
         await mainWindow.loadFile('dist/UI/index.html');
     }
 
-    setImmediate(() => {
-        db = require('./_utils/db');
-        ipcHandlers = require('./_ipc-handlers/index');
-
-        // 初始化 IPC 事件
-        Object.entries(ipcHandlers).forEach(([name, fn]) => {
-            if(typeof fn !== 'function') return;
-
-            if(name === 'fromMain'){
-                fn({ mwin: mainWindow });
-                return;
-            }
-
-            fn();
-        });
+    setImmediate(async () => {
+        const { fromMain } = await import('./_ipc-handlers/index.js');
+        fromMain({ mwin: mainWindow });
     });
 
     // 關閉應用時觸發
     app.on('before-quit', () => {
         try{
             isDev && console.log('準備關閉應用 開始清理多餘資料...');
-            db.prepare(`DELETE FROM save_tmp`).run();
+            db.exec(`DELETE FROM save_tmp`);
             db.exec('VACUUM');
             db.close();
             isDev && console.log('✅ 資料庫清理完成');

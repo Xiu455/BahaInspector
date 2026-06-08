@@ -1,6 +1,4 @@
-const cheerio = require('cheerio');
-
-// const ROOTDIR = process.cwd();
+import * as cheerio from 'cheerio'
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -49,14 +47,14 @@ async function runWithConcurrencyLimit(tasks, max, fn=()=>{}){
 }
 
 // 檢查 BAHARUNE 是否有效
-const checkTokenBH = async (token) => {
+export const checkTokenBH = async (token) => {
     const html = await getPostListHtml('', token);
     const $ = cheerio.load(html);
 
     return $('.frame p').eq(0).text() === '請輸入搜尋關鍵字!';
 };
 
-const createBartex = (options) => {
+export const createBartex = (options) => {
     options = {
         fetchDelay: 1000,
         worker: 5,
@@ -108,7 +106,7 @@ const createBartex = (options) => {
 
         const postList = postListDom.map((i, e) => {
             const $e = $(e);
-            
+
             const url = $e.find('.search-result_title a').attr('href');
             const parsedUrl = new URL(url);
             const paramsUrl = parsedUrl.searchParams;
@@ -120,7 +118,7 @@ const createBartex = (options) => {
                 tpye_date[1] = tpye_date[0];
                 tpye_date[0] = '';
             }
-            
+
             return{
                 url: url,
                 url_params:{
@@ -153,7 +151,7 @@ const createBartex = (options) => {
             if (content.includes('showPageButton')) {
                 // 排除 function 定義 避免誤判
                 content = content.replace(/function\s+showPageButton/, '_');
-    
+
                 // 擷取呼叫函式的第三個參數(頁數)
                 const match = content.match(/showPageButton\s*\(\s*[^,]+,\s*[^,]+,\s*([^,]+)\s*,/);
                 if (match && match[1]) {
@@ -213,9 +211,4 @@ const createBartex = (options) => {
         get,
         on,
     }
-}
-
-module.exports = {
-    checkTokenBH,
-    createBartex,
 }

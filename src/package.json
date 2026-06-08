@@ -2,11 +2,11 @@
   "name": "baha-inspector",
   "version": "1.1.0",
   "main": "main.js",
+  "type": "module",
   "scripts": {
     "react": "cd UI && npx vite",
     "electron": "chcp 65001 && electron .",
     "======================": "echo \"This is dividing line\" && exit 1",
-    "dev": " concurrently \"npm:react\" \"npm:electron\" ",
     "vite:build": "cd UI && npx vite build",
     "build": "cd UI && npx vite build && cd ../ && electron-builder",
     "install:all": "npm install && cd UI && npm install"
@@ -38,20 +38,16 @@
   "author": "",
   "license": "ISC",
   "description": "BahaInspector",
-  "devDependencies": {
-    "concurrently": "^8.2.2",
-    "electron": "^38.1.2",
-    "electron-builder": "^25.1.8",
-    "electron-rebuild": "^3.2.9",
-    "electron-reloader": "^1.2.3",
-    "node-abi": "^4.14.0"
-  },
   "charset": "UTF-8",
+  "devDependencies": {
+    "electron": "^42.3.3",
+    "electron-builder": "^26.15.2",
+    "electron-rebuild": "^3.2.9",
+    "electron-reloader": "^1.2.3"
+  },
   "dependencies": {
-    "better-sqlite3": "^12.2.0",
-    "cheerio": "^1.1.0",
-    "electron-is-dev": "^2.0.0",
-    "json2csv": "^6.0.0-alpha.2",
-    "sass": "^1.89.2"
+    "cheerio": "^1.2.0",
+    "electron-is-dev": "^3.0.1",
+    "json2csv": "^6.0.0-alpha.2"
   }
 }

@@ -69,10 +69,9 @@ const SwBtn = (props) => {
 }
 
 export default function SettingPage(){
-  const configObj = snapshot(configState);
   const configSnap = useSnapshot(configState);
 
-  const [ config, setConfig ] = useState(configObj);
+  const [ prevConfig, setPrevConfig ] = useState(snapshot(configState));
   const [ isChange, setIsChange ] = useState(false);
 
   // 處理輸入值
@@ -95,10 +94,7 @@ export default function SettingPage(){
       value = (value >= 0)? parseInt(value) : '';
     }
 
-    setConfig(prev => ({
-      ...prev,
-      [name]: value
-    }))
+    configState[name] = value;  // 更新配置值
   }
 
   // 處理失焦事件
@@ -113,7 +109,7 @@ export default function SettingPage(){
 
       value = parseInt(boundsCheck[name](value));
 
-      setConfig(prev => ({...prev, [name]: value }));
+      configState[name] = value;
     }
   }
 
@@ -121,27 +117,26 @@ export default function SettingPage(){
   const saveConfigClick = async () => {
     FSLCtrl.open('儲存中...');
 
+    const config = snapshot(configState); // 取得最新的配置值
+
     await electron.invoke('save-config', config);
 
-    Object.assign(configState, config);
-
+    setPrevConfig(config);  // 更新預設值
     setIsChange(false);
     FSLCtrl.close();
   }
 
   // 還原預設值
   const resetConfigClick = () => {
-    setConfig({
-      BAHARUNE: '',
-      ConcurrencyCount: 5,
-      ConcurrencyDelay: 1000,
-    });
+    configState.BAHARUNE = '';
+    configState.ConcurrencyCount = 5;
+    configState.ConcurrencyDelay = 1000;
   }
 
   // 檢查Token是否有效
   const checkTokenClick = async () => {
     FSLCtrl.open('檢查BAHARUNE Token中...');
-    const tokenStatus = await electron.invoke('check-token', { token: config.BAHARUNE });
+    const tokenStatus = await electron.invoke('check-token', { token: configState.BAHARUNE });
     if(tokenStatus){
       toast.success('Token 有效', {toastId: 'token-success'});
     }else{
@@ -154,13 +149,17 @@ export default function SettingPage(){
   const toggleArisuClick = async (e) => {
     configState.openArisu = e.target.checked;
     await electron.invoke('save-config', snapshot(configState));
-    // console.log(snapshot(configState));
   }
 
+  // 比較是否有更動
   useEffect(() => {
     const configObj = snapshot(configState);
-    setIsChange(!_.isEqual(config, configObj));
-  }, [config]);
+
+    const { openArisu: _ig1, ...curr } = configObj;
+    const { openArisu: _ig2, ...prev } = prevConfig;
+
+    setIsChange(!_.isEqual(curr, prev));
+  }, [configSnap]);
 
   return(<div className='setting-page'>
     <div className="config-input-area">
@@ -168,7 +167,7 @@ export default function SettingPage(){
         width="100%"
         prompt="BAHARUNE Token"
         name="BAHARUNE"
-        value={config.BAHARUNE}
+        value={configSnap.BAHARUNE}
         onChange={handleConfigChange}
       />
 
@@ -177,7 +176,7 @@ export default function SettingPage(){
         prompt="請求併發數"
         name="ConcurrencyCount"
         type="number"
-        value={config.ConcurrencyCount}
+        value={configSnap.ConcurrencyCount}
         onChange={handleConfigChange}
         onBlur={handleBlur}
       />
@@ -187,7 +186,7 @@ export default function SettingPage(){
         prompt="併發延遲(ms)"
         name="ConcurrencyDelay"
         type="number"
-        value={config.ConcurrencyDelay}
+        value={configSnap.ConcurrencyDelay}
         onChange={handleConfigChange}
         onBlur={handleBlur}
       />
